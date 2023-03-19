@@ -74,7 +74,9 @@ public class OpenmrsUtil {
   }
 
   public IGenericClient getSourceClient(boolean enableRequestLogging) {
-    IClientInterceptor authInterceptor = new BasicAuthInterceptor(this.sourceUser, this.sourcePw);
+    String accessToken = ""
+    // IClientInterceptor authInterceptor = new BasicAuthInterceptor(this.sourceUser, this.sourcePw);
+    IClientInterceptor authInterceptor = new BearerTokenAuthInterceptor(accessToken);
     fhirContext.getRestfulClientFactory().setSocketTimeout(200 * 1000);
 
     IGenericClient client = fhirContext.getRestfulClientFactory().newGenericClient(this.fhirUrl);

@@ -64,18 +64,39 @@ public class JdbcFetchHapi {
           jsonResource = new String(resultSet.getBytes("res_text"), Charsets.UTF_8);
           break;
         case "JSONC":
-          Blob blob = resultSet.getBlob("res_text");
-          jsonResource = GZipUtil.decompress(blob.getBytes(1, (int) blob.length()));
-          blob.free();
+          try {
+            Blob blob = resultSet.getBlob("res_text");
+            //            log.warn("String ------ Blob string ****\n" + blob.toString());
+            jsonResource = GZipUtil.decompress(blob.getBytes(1, (int) blob.length()));
+            //            log.warn("String ------ JSON Resource ****\n" + jsonResource);
+            blob.free();
+          } catch (Exception e) {
+            //            log.error("Exception: ", e);
+            e.printStackTrace();
+          }
           break;
         case "DEL":
           break;
       }
 
+      String resourceEnc = resultSet.getString("res_encoding");
       String resourceId = resultSet.getString("res_id");
       String resourceType = resultSet.getString("res_type");
       String lastUpdated = resultSet.getString("res_updated");
       String resourceVersion = resultSet.getString("res_ver");
+      log.warn(
+          "mapRow ------ JSON Resource **** "
+              + resourceEnc
+              + " "
+              + resourceId
+              + " "
+              + resourceType
+              + " "
+              + lastUpdated
+              + " "
+              + resourceVersion
+              + " "
+              + jsonResource);
       return HapiRowDescriptor.create(
           resourceId, resourceType, lastUpdated, resourceVersion, jsonResource);
     }

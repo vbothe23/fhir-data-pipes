@@ -82,6 +82,7 @@ public class ConvertResourceFn extends FetchSearchPageFn<HapiRowDescriptor> {
     setMetaTags(element, meta);
 
     String jsonResource = element.jsonResource();
+    log.warn(" element : " + element);
     // The jsonResource field will be empty in case of deleted records and are skipped when written
     // to target parquet files/sinkDb. This is fine for initial batch as they need not be migrated,
     // but for incremental run they need to be migrated and the original records have to be deleted
